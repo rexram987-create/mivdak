@@ -1,0 +1,20 @@
+{
+  "name": "מבדק — מדריך להבנת בדיקות מעבדה",
+  "short_name": "מבדק",
+  "description": "מדריך נגיש להבנת בדיקות מעבדה בעברית",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f3f8f7",
+  "theme_color": "#0e766b",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
