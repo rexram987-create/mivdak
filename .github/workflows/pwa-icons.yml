@@ -1,0 +1,39 @@
+name: Generate PWA PNG icons
+on:
+  push:
+    paths:
+      - .github/workflows/pwa-icons.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  icons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate real PNG icons
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          python - <<'PY'
+          from PIL import Image, ImageDraw
+          for n in (192,512):
+              im=Image.new('RGB',(n,n),'#0e766b')
+              d=ImageDraw.Draw(im)
+              s=n/512
+              def pt(coords):return tuple(round(v*s) for v in coords)
+              d.line([pt(p) for p in [(214,92),(298,92)]],fill='white',width=round(25*s))
+              d.line([pt(p) for p in [(231,92),(231,227),(140,372),(153,414),(178,436),(334,436),(359,414),(372,372),(281,227),(281,92)]],fill='white',width=round(25*s),joint='curve')
+              d.polygon([pt(p) for p in [(183,349),(329,349),(359,396),(153,396)]],fill='#a6f4dc')
+              for x,y,r in [(233,317,14),(281,283,10)]:
+                  d.ellipse(pt((x-r,y-r,x+r,y+r)),fill='#a6f4dc')
+              im.save(f'icon-{n}.png',optimize=True)
+          PY
+      - name: Commit icons
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add icon-192.png icon-512.png
+          git diff --cached --quiet || (git commit -m "Add PNG icons for Android PWA installation" && git push)
